@@ -52,6 +52,16 @@ namespace DitzyExtensions.Collection {
 				.AsDict()
 				.ToDictionary(entry => entry.Key, entry => entry.Value);
 
+#if NET6_0_OR_GREATER
+		public static V GetValueOrDefault<K, V>(this IDictionary<K, V> source, K key) =>
+			source.GetValueOrDefault(key, default!);
+#endif
+
+#if NET6_0_OR_GREATER
+		public static V GetValueOrDefault<K, V>(this IDictionary<K, V> source, K key, V defaultValue) =>
+			source.TryGetValue(key, out var value) ? value : defaultValue;
+#endif
+
 		public static IDictionary<K, V> With<K, V>(this IDictionary<K, V> source, params (K, V)[] entries)
 #if NET48
 		{
@@ -115,7 +125,7 @@ namespace DitzyExtensions.Collection {
 		public static IDictionary<K, V> VerifyEnumDictionary<K, V>(this IDictionary<K, V> enumDict)
 			where K : struct, Enum {
 #if NET7_0_OR_GREATER
-		var allEnumsAreInDict = (Enum.GetValuesAsUnderlyingType<K>() as K[])!.All(enumDict.ContainsKey);
+			var allEnumsAreInDict = (Enum.GetValuesAsUnderlyingType<K>() as K[])!.All(enumDict.ContainsKey);
 #else
 			var allEnumsAreInDict = (Enum.GetValues(typeof(K)) as K[] ?? Array.Empty<K>()).All(enumDict.ContainsKey);
 #endif

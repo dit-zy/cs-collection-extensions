@@ -35,7 +35,7 @@ namespace DitzyExtensions.Collection {
 			source.ToList();
 
 		public static IList<T> AsSingletonList<T>(this T value) =>
-			new List<T>() { value }.AsList();
+			new[] { value }.AsList();
 
 		public static bool IsEmpty<T>(this ICollection<T> source) =>
 			source.Count == 0;
