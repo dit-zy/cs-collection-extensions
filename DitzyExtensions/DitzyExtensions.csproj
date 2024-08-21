@@ -3,20 +3,20 @@
 	<PropertyGroup>
 		<Authors>dit-zy</Authors>
 		<Title>Ditzy Extensions</Title>
-		<Version>1.0.1</Version>
+		<Version>1.0.2-SNAPSHOT</Version>
 		<Description>a collection of extensions and utilities for making it easier and more convenient to program in a functional style and with collection classes.</Description>
 		<RepositoryUrl>https://github.com/dit-zy/ditzy-extensions</RepositoryUrl>
 		<TargetFrameworks>net48;net6.0;net7.0;net8.0</TargetFrameworks>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 	</PropertyGroup>
-	
+
 	<PropertyGroup Condition=" '$(TargetFramework)' != 'net48' ">
 		<Nullable>enable</Nullable>
 		<LangVersion>12.0</LangVersion>
 	</PropertyGroup>
 
-	<ItemGroup>
-	  <PackageReference Include="CSharpFunctionalExtensions" Version="2.42.5" />
+	<ItemGroup Label="dependencies">
+		<PackageReference Include="CSharpFunctionalExtensions" Version="2.42.5"/>
 	</ItemGroup>
 
 </Project>
