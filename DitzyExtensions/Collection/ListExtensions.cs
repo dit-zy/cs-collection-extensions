@@ -42,5 +42,8 @@ namespace DitzyExtensions.Collection {
 
 		public static bool IsNotEmpty<T>(this ICollection<T> source) =>
 			0 < source.Count;
+
+		public static IEnumerable<T> Unwrap<T>(this IEnumerable<IEnumerable<T>> source) =>
+			source.SelectMany(x => x);
 	}
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using CSharpFunctionalExtensions;
 
 namespace DitzyExtensions {
 	public static class EnumExtensions {
@@ -8,5 +9,10 @@ namespace DitzyExtensions {
 #else
 			Enum.GetValues(typeof(T)) as T[] ?? Array.Empty<T>();
 #endif
+
+		public static Result<T, string> AsEnum<T>(this string enumName) where T : struct =>
+			Enum.TryParse(enumName, true, out T result)
+				? Result.Success<T, string>(result)
+				: $"";
 	}
 }
