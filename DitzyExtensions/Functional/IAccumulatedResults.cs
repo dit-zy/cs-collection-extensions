@@ -2,7 +2,8 @@
 
 namespace DitzyExtensions.Functional {
 	public interface IAccumulatedResults<out T, out E> {
-		IEnumerable<T> Values { get; }
+		T Value { get; }
 		IEnumerable<E> Errors { get; }
+		bool HasValue { get; }
 	}
 }

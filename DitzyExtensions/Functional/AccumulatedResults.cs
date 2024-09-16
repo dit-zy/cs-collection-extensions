@@ -4,25 +4,46 @@ using DitzyExtensions.Collection;
 
 namespace DitzyExtensions.Functional {
 	public class AccumulatedResults<T, E> : IAccumulatedResults<T, E> {
-		private readonly IList<T> _value;
+#if NET6_0_OR_GREATER
+		private readonly T? _value;
+#else
+		private readonly T _value;
+#endif
 		private readonly IList<E> _errors;
 
-		public IEnumerable<T> Values => _value;
+		public T Value {
+			get {
+				if (!HasValue) {
+					throw new AccumulationHasNoValueException<E>(_errors);
+				}
+#if NET6_0_OR_GREATER
+				return _value!;
+#else
+				return _value;
+#endif
+			}
+		}
+
 		public IEnumerable<E> Errors => _errors;
 
-		internal AccumulatedResults(IEnumerable<T> value) {
-			_value = value.AsList();
+		public bool HasValue { get; }
+
+		internal AccumulatedResults(T value) {
+			_value = value;
 			_errors = Array.Empty<E>();
+			HasValue = true;
 		}
 
 		internal AccumulatedResults(IEnumerable<E> errors) {
-			_value = Array.Empty<T>();
+			_value = default;
 			_errors = errors.AsList();
+			HasValue = false;
 		}
 
-		internal AccumulatedResults(IEnumerable<T> value, IEnumerable<E> errors) {
-			_value = value.AsList();
+		internal AccumulatedResults(T value, IEnumerable<E> errors) {
+			_value = value;
 			_errors = errors.AsList();
+			HasValue = true;
 		}
 
 		public static implicit operator AccumulatedResults<T, E>(T value) =>
@@ -34,18 +55,16 @@ namespace DitzyExtensions.Functional {
 
 	public static class AccumulatedResults {
 		public static AccumulatedResults<T, E> From<T, E>(T value) =>
-			new AccumulatedResults<T, E>(value.AsSingletonList());
+			new AccumulatedResults<T, E>(value);
 
-		public static AccumulatedResults<T, E> From<T, E>(E error) =>
-			new AccumulatedResults<T, E>(error.AsSingletonList());
-
-		public static AccumulatedResults<T, E> From<T, E>(IEnumerable<T> values) =>
-			new AccumulatedResults<T, E>(values);
-
+		public static AccumulatedResults<T, E> From<T, E>(params E[] errors) =>
+			new AccumulatedResults<T, E>(errors);
 		public static AccumulatedResults<T, E> From<T, E>(IEnumerable<E> errors) =>
 			new AccumulatedResults<T, E>(errors);
 
-		public static AccumulatedResults<T, E> From<T, E>(IEnumerable<T> values, IEnumerable<E> errors) =>
-			new AccumulatedResults<T, E>(values, errors);
+		public static AccumulatedResults<T, E> From<T, E>(T value, params E[] errors) =>
+			new AccumulatedResults<T, E>(value, errors);
+		public static AccumulatedResults<T, E> From<T, E>(T value, IEnumerable<E> errors) =>
+			new AccumulatedResults<T, E>(value, errors);
 	}
 }
