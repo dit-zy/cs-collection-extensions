@@ -1,10 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿#if NET48
 using System.Collections.ObjectModel;
-using System.Linq;
-#if !NET48
+#else
 using System.Collections.Immutable;
 #endif
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace DitzyExtensions.Collection {
 	public static class DictExtensions {
@@ -34,6 +36,26 @@ namespace DitzyExtensions.Collection {
 				.ToImmutableDictionary(entry => entry.key, entry => entry.value);
 #endif
 
+		public static IDictionary<K, V> AsDict<K, V>(this IEnumerable<V> source, Func<V, K> keySelector)
+#if NET48
+			=>
+#else
+			where K : notnull =>
+#endif
+			source.AsDict(keySelector, value => value);
+
+		public static IDictionary<K, V> AsDict<T, K, V>(
+			this IEnumerable<T> source,
+			Func<T, K> keySelector,
+			Func<T, V> valueSelector
+		)
+#if NET48
+			=>
+#else
+			where K : notnull =>
+#endif
+			source.Select(entry => (keySelector(entry), valueSelector(entry))).AsDict();
+
 		public static IDictionary<K, V> AsMutableDict<K, V>(this IEnumerable<KeyValuePair<K, V>> source)
 #if NET48
 			=>
@@ -61,6 +83,12 @@ namespace DitzyExtensions.Collection {
 		public static V GetValueOrDefault<K, V>(this IDictionary<K, V> source, K key, V defaultValue) =>
 			source.TryGetValue(key, out var value) ? value : defaultValue;
 #endif
+
+		public static IEnumerable<T> Select<K, V, T>(this IDictionary<K, V> source, Func<K, V, T> transform) =>
+			source.Select(kv => transform(kv.Key, kv.Value));
+
+		public static IEnumerable<T> Select<K, V, T>(this IDictionary<K, V> source, Func<K, V, int, T> transform) =>
+			source.Select((kv, index) => transform(kv.Key, kv.Value, index));
 
 		public static IDictionary<K, V> With<K, V>(this IDictionary<K, V> source, params (K, V)[] entries)
 #if NET48

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using CSharpFunctionalExtensions;
 #if !NET48
 using System.Collections.Immutable;
 #endif
@@ -43,7 +44,49 @@ namespace DitzyExtensions.Collection {
 		public static bool IsNotEmpty<T>(this ICollection<T> source) =>
 			0 < source.Count;
 
-		public static IEnumerable<T> Unwrap<T>(this IEnumerable<IEnumerable<T>> source) =>
+		public static IEnumerable<T> Flatten<T>(this IEnumerable<IEnumerable<T>> source) =>
 			source.SelectMany(x => x);
+
+#if NET48
+		public static Maybe<T> MinBy<T, U>(
+			this IEnumerable<T> source,
+			Func<T, int, U> keySelector
+		) =>
+			source.MinBy(keySelector, null);
+
+		public static Maybe<T> MinBy<T, U>(
+			this IEnumerable<T> source,
+			Func<T, int, U> keySelector,
+			IComparer<U> comparer
+		) {
+			if (comparer is null) {
+				comparer = Comparer<U>.Default;
+			}
+			
+			T minEntry = default;
+			U minKey = default;
+			var started = false;
+
+			source.ForEach(
+				(t, i) => {
+					var newKey = keySelector(t, i);
+
+					if (!started) {
+						minEntry = t;
+						minKey = newKey;
+						started = true;
+						return;
+					}
+
+					if (comparer.Compare(newKey, minKey) < 0) {
+						minEntry = t;
+						minKey = newKey;
+					}
+				}
+			);
+
+			return started ? minEntry : Maybe<T>.None;
+		}
+#endif
 	}
 }

@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<Authors>dit-zy</Authors>
 		<Title>Ditzy Extensions</Title>
-		<Version>1.2.0</Version>
+		<Version>1.2.1</Version>
 		<Description>a collection of extensions and utilities for making it easier and more convenient to program in a functional style and with collection classes.</Description>
 		<RepositoryUrl>https://github.com/dit-zy/ditzy-extensions</RepositoryUrl>
 		<TargetFrameworks>net48;net6.0;net7.0;net8.0</TargetFrameworks>
@@ -16,7 +16,7 @@
 	</PropertyGroup>
 
 	<ItemGroup Label="dependencies">
-		<PackageReference Include="CSharpFunctionalExtensions" Version="2.42.5"/>
+		<PackageReference Include="CSharpFunctionalExtensions" Version="3.1.0"/>
 	</ItemGroup>
 
 </Project>
