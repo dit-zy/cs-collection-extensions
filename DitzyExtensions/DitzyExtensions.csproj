@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<Authors>dit-zy</Authors>
 		<Title>Ditzy Extensions</Title>
-		<Version>1.2.1</Version>
+		<Version>1.2.2</Version>
 		<Description>a collection of extensions and utilities for making it easier and more convenient to program in a functional style and with collection classes.</Description>
 		<RepositoryUrl>https://github.com/dit-zy/ditzy-extensions</RepositoryUrl>
 		<TargetFrameworks>net8.0;net7.0;net6.0;net48;netstandard2.0</TargetFrameworks>
