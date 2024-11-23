@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿#if !NETSTANDARD2_0
+using System.Numerics;
 using static DitzyExtensions.MathUtils;
 
 namespace DitzyExtensions {
@@ -8,3 +9,4 @@ namespace DitzyExtensions {
 		public static Vector3 XYZ(this Vector4 vec) => V3(vec.X, vec.Y, vec.Z);
 	}
 }
+#endif

@@ -1,4 +1,4 @@
-﻿#if NET48
+﻿#if N48_S2
 using System.Collections.ObjectModel;
 #else
 using System.Collections.Immutable;
@@ -11,7 +11,7 @@ using System.Linq;
 namespace DitzyExtensions.Collection {
 	public static class DictExtensions {
 		public static IDictionary<K, V> AsDict<K, V>(this IEnumerable<KeyValuePair<K, V>> source)
-#if NET48
+#if N48_S2
 			=>
 #else
 			where K : notnull =>
@@ -19,7 +19,7 @@ namespace DitzyExtensions.Collection {
 			source.Select(entry => (entry.Key, entry.Value)).AsDict();
 
 		public static IDictionary<K, V> AsDict<K, V>(this IEnumerable<(K key, V value)> source)
-#if NET48
+#if N48_S2
 			=>
 				new ReadOnlyDictionary<K, V>(
 					source
@@ -29,7 +29,7 @@ namespace DitzyExtensions.Collection {
 #endif
 				.GroupBy(entry => entry.key)
 				.Select(grouping => grouping.Last())
-#if NET48
+#if N48_S2
 						.ToDictionary(entry => entry.key, entry => entry.value)
 				);
 #else
@@ -37,7 +37,7 @@ namespace DitzyExtensions.Collection {
 #endif
 
 		public static IDictionary<K, V> AsDict<K, V>(this IEnumerable<V> source, Func<V, K> keySelector)
-#if NET48
+#if N48_S2
 			=>
 #else
 			where K : notnull =>
@@ -49,7 +49,7 @@ namespace DitzyExtensions.Collection {
 			Func<T, K> keySelector,
 			Func<T, V> valueSelector
 		)
-#if NET48
+#if N48_S2
 			=>
 #else
 			where K : notnull =>
@@ -57,7 +57,7 @@ namespace DitzyExtensions.Collection {
 			source.Select(entry => (keySelector(entry), valueSelector(entry))).AsDict();
 
 		public static IDictionary<K, V> AsMutableDict<K, V>(this IEnumerable<KeyValuePair<K, V>> source)
-#if NET48
+#if N48_S2
 			=>
 #else
 			where K : notnull =>
@@ -65,7 +65,7 @@ namespace DitzyExtensions.Collection {
 			source.Select(entry => (entry.Key, entry.Value)).AsMutableDict();
 
 		public static IDictionary<K, V> AsMutableDict<K, V>(this IEnumerable<(K, V)> source)
-#if NET48
+#if N48_S2
 			=>
 #else
 			where K : notnull =>
@@ -91,7 +91,7 @@ namespace DitzyExtensions.Collection {
 			source.Select((kv, index) => transform(kv.Key, kv.Value, index));
 
 		public static IDictionary<K, V> With<K, V>(this IDictionary<K, V> source, params (K, V)[] entries)
-#if NET48
+#if N48_S2
 		{
 #else
 			where K : notnull {
@@ -102,7 +102,7 @@ namespace DitzyExtensions.Collection {
 		}
 
 		public static IDictionary<K, V> Without<K, V>(this IDictionary<K, V> source, params K[] keys)
-#if NET48
+#if N48_S2
 		{
 #else
 			where K : notnull {
@@ -113,7 +113,7 @@ namespace DitzyExtensions.Collection {
 		}
 
 		public static IDictionary<V, K> Flip<K, V>(this IDictionary<K, V> source)
-#if NET48
+#if N48_S2
 			=>
 #else
 			where V : notnull =>
@@ -125,7 +125,7 @@ namespace DitzyExtensions.Collection {
 		public static IDictionary<K, V> Update<K, V>(
 			this IDictionary<K, V> source,
 			IEnumerable<(K key, V value)> updateEntries
-#if NET48
+#if N48_S2
 		) {
 #else
 		) where K : notnull {
@@ -143,7 +143,7 @@ namespace DitzyExtensions.Collection {
 		public static IDictionary<K, V> UseToUpdate<K, V>(
 			this IEnumerable<(K, V)> updateEntries,
 			IDictionary<K, V> target
-#if NET48
+#if N48_S2
 		) =>
 #else
 		) where K : notnull =>

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Markup;
 using DitzyExtensions.Functional;
 
 namespace DitzyExtensions.Collection {
@@ -37,7 +36,7 @@ namespace DitzyExtensions.Collection {
 			source.Select(entry => (entry.Key, entry.Value));
 
 		public static IEnumerable<(A, B)> WithDistinctFirst<A, B>(this IEnumerable<(A, B)> source)
-#if NET48
+#if N48_S2
 			=>
 #else
 			where A : notnull =>

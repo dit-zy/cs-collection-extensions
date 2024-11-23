@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using CSharpFunctionalExtensions;
-#if !NET48
+#if !N48_S2
 using System.Collections.Immutable;
 #endif
 
@@ -26,7 +26,7 @@ namespace DitzyExtensions.Collection {
 				.Select(result => result.Item2);
 
 		public static IList<T> AsList<T>(this IEnumerable<T> source) =>
-#if NET48
+#if N48_S2
 			source.ToList().AsReadOnly();
 #else
 			source.ToImmutableList();
@@ -47,7 +47,7 @@ namespace DitzyExtensions.Collection {
 		public static IEnumerable<T> Flatten<T>(this IEnumerable<IEnumerable<T>> source) =>
 			source.SelectMany(x => x);
 
-#if NET48
+#if N48_S2
 		public static Maybe<T> MinBy<T, U>(
 			this IEnumerable<T> source,
 			Func<T, int, U> keySelector

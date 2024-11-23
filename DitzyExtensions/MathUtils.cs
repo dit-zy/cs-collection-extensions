@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿#if !NETSTANDARD2_0
+using System.Numerics;
 
 namespace DitzyExtensions {
 	public static class MathUtils {
@@ -17,3 +18,4 @@ namespace DitzyExtensions {
 		public static Vector2 Transpose(this Vector2 vec) => new Vector2(vec.Y, vec.X);
 	}
 }
+#endif

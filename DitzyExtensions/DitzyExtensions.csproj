@@ -6,13 +6,17 @@
 		<Version>1.2.1</Version>
 		<Description>a collection of extensions and utilities for making it easier and more convenient to program in a functional style and with collection classes.</Description>
 		<RepositoryUrl>https://github.com/dit-zy/ditzy-extensions</RepositoryUrl>
-		<TargetFrameworks>net48;net6.0;net7.0;net8.0</TargetFrameworks>
+		<TargetFrameworks>net8.0;net7.0;net6.0;net48;netstandard2.0</TargetFrameworks>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 	</PropertyGroup>
 
-	<PropertyGroup Condition=" '$(TargetFramework)' != 'net48' ">
+	<PropertyGroup Condition=" '$(TargetFramework)' != 'net48' And '$(TargetFramework)' != 'netstandard2.0' ">
 		<Nullable>enable</Nullable>
 		<LangVersion>12.0</LangVersion>
+	</PropertyGroup>
+
+	<PropertyGroup Condition=" '$(TargetFramework)' == 'net48' Or '$(TargetFramework)' == 'netstandard2.0' ">
+		<DefineConstants>N48_S2</DefineConstants>
 	</PropertyGroup>
 
 	<ItemGroup Label="dependencies">
