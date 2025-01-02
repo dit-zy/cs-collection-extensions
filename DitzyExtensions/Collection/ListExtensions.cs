@@ -88,5 +88,15 @@ namespace DitzyExtensions.Collection {
 			return started ? minEntry : Maybe<T>.None;
 		}
 #endif
+
+		public static IEnumerable<T> With<T>(this IEnumerable<T> source, params (int, T)[] updateEntries) =>
+			source.With((IEnumerable<(int, T)>)updateEntries);
+
+		public static IEnumerable<T> With<T>(this IEnumerable<T> source, IEnumerable<(int, T)> updateEntries) =>
+			source
+				.Select((value, index) => (index, value))
+				.Concat(updateEntries)
+				.GroupBy(entry => entry.Item1)
+				.Select(grouping => grouping.Last().Item2);
 	}
 }

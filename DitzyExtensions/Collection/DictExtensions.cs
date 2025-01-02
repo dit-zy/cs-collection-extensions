@@ -84,6 +84,22 @@ namespace DitzyExtensions.Collection {
 			source.TryGetValue(key, out var value) ? value : defaultValue;
 #endif
 
+		public static IDictionary<K, V> ForEachEntry<K, V>(this IDictionary<K, V> source, Action<K, V> action)
+#if N48_S2
+			=>
+#else
+			where K : notnull =>
+#endif
+			source.ForEach(kv => action(kv.Key, kv.Value)).AsDict();
+
+		public static IDictionary<K, V> ForEachEntry<K, V>(this IDictionary<K, V> source, Action<K, V, int> action)
+#if N48_S2
+			=>
+#else
+			where K : notnull =>
+#endif
+			source.ForEach((kv, index) => action(kv.Key, kv.Value, index)).AsDict();
+
 		public static IEnumerable<T> Select<K, V, T>(this IDictionary<K, V> source, Func<K, V, T> transform) =>
 			source.Select(kv => transform(kv.Key, kv.Value));
 
