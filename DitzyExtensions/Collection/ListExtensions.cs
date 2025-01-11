@@ -98,5 +98,24 @@ namespace DitzyExtensions.Collection {
 				.Concat(updateEntries)
 				.GroupBy(entry => entry.Item1)
 				.Select(grouping => grouping.Last().Item2);
+
+		public static IEnumerable<T> Sort<T>(this ICollection<T> source) {
+			var list = new List<T>(source);
+			list.Sort();
+			return list.AsList();
+		}
+
+		public static IEnumerable<T> Sort<T>(this ICollection<T> source, IComparer<T> comparer) {
+			var list = new List<T>(source);
+			list.Sort(comparer);
+			return list.AsList();
+		}
+
+		public static IEnumerable<T> Sort<T>(this ICollection<T> source, Func<T, T, int> comparer) {
+			var list = new List<T>(source);
+			list.Sort(new Comparison<T>(comparer));
+			return list.AsList();
+		}
 	}
+	
 }
