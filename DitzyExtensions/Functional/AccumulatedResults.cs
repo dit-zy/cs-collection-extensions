@@ -24,9 +24,11 @@ namespace DitzyExtensions.Functional {
 			}
 		}
 
-		public IEnumerable<E> Errors => _errors;
+		public ICollection<E> Errors => _errors;
 
 		public bool HasValue { get; }
+
+		public bool HasErrors => Errors.IsNotEmpty();
 
 		internal AccumulatedResults(T value) {
 			_value = value;
@@ -59,11 +61,13 @@ namespace DitzyExtensions.Functional {
 
 		public static AccumulatedResults<T, E> From<T, E>(params E[] errors) =>
 			new AccumulatedResults<T, E>(errors);
+
 		public static AccumulatedResults<T, E> From<T, E>(IEnumerable<E> errors) =>
 			new AccumulatedResults<T, E>(errors);
 
 		public static AccumulatedResults<T, E> From<T, E>(T value, params E[] errors) =>
 			new AccumulatedResults<T, E>(value, errors);
+
 		public static AccumulatedResults<T, E> From<T, E>(T value, IEnumerable<E> errors) =>
 			new AccumulatedResults<T, E>(value, errors);
 	}

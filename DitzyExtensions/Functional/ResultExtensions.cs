@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.AccessControl;
 using CSharpFunctionalExtensions;
 using DitzyExtensions.Collection;
 
@@ -8,14 +9,14 @@ namespace DitzyExtensions.Functional {
 	public static class ResultExtensions {
 		public static AccumulatedResults<U, E> Select<T, U, E>(this AccumulatedResults<T, E> source, Func<T, U> selector) =>
 			source.HasValue
-				? AccumulatedResults.From(selector(source.Value), source.Errors)
+				? AccumulatedResults.From<U, E>(selector(source.Value), source.Errors)
 				: AccumulatedResults.From<U, E>(source.Errors);
 
 		public static AccumulatedResults<IEnumerable<U>, E> Select<T, U, E>(
 			this AccumulatedResults<IEnumerable<T>, E> source,
 			Func<T, U> selector
 		) =>
-			AccumulatedResults.From(source.Value.Select(selector), source.Errors);
+			AccumulatedResults.From<IEnumerable<U>, E>(source.Value.Select(selector), source.Errors);
 
 		public static AccumulatedResults<IEnumerable<U>, E> SelectMany<T, U, E>(
 			this IEnumerable<T> source,
@@ -24,7 +25,7 @@ namespace DitzyExtensions.Functional {
 			return source.Select(selector)
 				.Reduce(
 					(acc, results) => {
-						acc.values.Add(results.Value);
+						if (results.HasValue) acc.values.Add(results.Value);
 						acc.errors.AddRange(results.Errors);
 						return acc;
 					},
@@ -119,9 +120,14 @@ namespace DitzyExtensions.Functional {
 			this AccumulatedResults<T, E> source,
 			Func<T, U> valueModifier
 		) =>
-			AccumulatedResults.From(valueModifier(source.Value), source.Errors);
+			AccumulatedResults.From<U, E>(valueModifier(source.Value), source.Errors);
 
-		public static AccumulatedResults<IEnumerable<T>, E> ForEachValue<T, E>(
+		public static AccumulatedResults<IEnumerable<T>, E> Flatten<T, E>(
+			this AccumulatedResults<IEnumerable<IEnumerable<T>>, E> source
+		) =>
+			source.WithValue(enumerable => enumerable.Flatten());
+
+	public static AccumulatedResults<IEnumerable<T>, E> ForEachValue<T, E>(
 			this AccumulatedResults<IEnumerable<T>, E> source,
 			Action<T> action
 		) {
