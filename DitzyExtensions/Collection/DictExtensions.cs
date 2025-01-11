@@ -84,6 +84,8 @@ namespace DitzyExtensions.Collection {
 			source.TryGetValue(key, out var value) ? value : defaultValue;
 #endif
 
+		public static bool NotContainsKey<K, V>(this IDictionary<K, V> source, K key) => !source.ContainsKey(key);
+
 		public static IDictionary<K, V> ForEachEntry<K, V>(this IDictionary<K, V> source, Action<K, V> action)
 #if N48_S2
 			=>
